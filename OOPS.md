@@ -1001,96 +1001,96 @@ If a class have both static and non static constructor then static constructor w
 
 ## Create a Table
 
-CREATE TABLE [dbo].[Person](
-	[Id] [bigint] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](50) NULL,
-	[City] [nvarchar](50) NULL,
-	[Gender] [nvarchar](50) NULL,
- CONSTRAINT [PK_Person] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+	CREATE TABLE [dbo].[Person](
+		[Id] [bigint] IDENTITY(1,1) NOT NULL,
+		[Name] [nvarchar](50) NULL,
+		[City] [nvarchar](50) NULL,
+		[Gender] [nvarchar](50) NULL,
+	 CONSTRAINT [PK_Person] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
 
 ## Create Table Type
 
-CREATE TYPE dbo.PersonTableType AS TABLE
-    ( ID int, Name nvarchar(50),City nvarchar(50), Gender nvarchar(50) )
+	CREATE TYPE dbo.PersonTableType AS TABLE
+	    ( ID int, Name nvarchar(50),City nvarchar(50), Gender nvarchar(50) )
 
 
 ## Create a Store Procedure
 
-CREATE PROCEDURE usp_InsertPerson 
-    (@person dbo.PersonTableType READONLY)
-	AS
-BEGIN
-	
-	INSERT INTO dbo.Person (Name,City,Gender)
-    SELECT nc.Name, nc.City, nc.Gender FROM @person AS nc;
+	CREATE PROCEDURE usp_InsertPerson 
+	    (@person dbo.PersonTableType READONLY)
+		AS
+	BEGIN
 
-END
+		INSERT INTO dbo.Person (Name,City,Gender)
+	    SELECT nc.Name, nc.City, nc.Gender FROM @person AS nc;
 
-T## est the Store Proc and try to pass table type as parameter
+	END
 
-DECLARE @Person dbo.PersonTableType
-INSERT @Person (Name,City,Gender) VALUES ('Jame','NY','Male')
-EXECUTE [dbo].[usp_InsertPerson] @Person
+## Test the Store Proc and try to pass table type as parameter
 
-SELECT * FROM Person
+	DECLARE @Person dbo.PersonTableType
+	INSERT @Person (Name,City,Gender) VALUES ('Jame','NY','Male')
+	EXECUTE [dbo].[usp_InsertPerson] @Person
+
+	SELECT * FROM Person
 
 ## Code in VS C#
 
-class Program
-{
-    
-     static void Main(string[] args)
-     {
-         SqlConnection connection = new SqlConnection();
-         connection.ConnectionString = "Data Source=.;Initial Catalog=JustChillDB;User ID=sa;Password=Password$2";
+	class Program
+	{
 
-         DataTable PersonDataTable = new DataTable();
+	     static void Main(string[] args)
+	     {
+		 SqlConnection connection = new SqlConnection();
+		 connection.ConnectionString = "Data Source=.;Initial Catalog=JustChillDB;User ID=sa;Password=Password$2";
 
-         PersonDataTable.Columns.Add("ID");
-         PersonDataTable.Columns.Add("Name");
-         PersonDataTable.Columns.Add("City");
-         PersonDataTable.Columns.Add("Gender");
+		 DataTable PersonDataTable = new DataTable();
 
-         DataRow rw = PersonDataTable.NewRow();
-         rw["ID"] = "0";
-         rw["Name"] = "Dev";
-         rw["City"] = "Meerut";
-         rw["Gender"] = "Male";
-         PersonDataTable.Rows.Add(rw);
+		 PersonDataTable.Columns.Add("ID");
+		 PersonDataTable.Columns.Add("Name");
+		 PersonDataTable.Columns.Add("City");
+		 PersonDataTable.Columns.Add("Gender");
 
-
-         DataRow rw1 = PersonDataTable.NewRow();
-         rw1["ID"] = "0";
-         rw1["Name"] = "Mark";
-         rw1["City"] = "Delhi";
-         rw1["Gender"] = "Male";
-         PersonDataTable.Rows.Add(rw1);
+		 DataRow rw = PersonDataTable.NewRow();
+		 rw["ID"] = "0";
+		 rw["Name"] = "Dev";
+		 rw["City"] = "Meerut";
+		 rw["Gender"] = "Male";
+		 PersonDataTable.Rows.Add(rw);
 
 
-         // Assumes connection is an open SqlConnection object.
-         using (connection)
-         {
-             connection.Open();
-             // Create a DataTable with the modified rows.
-             DataTable addedPerson =
-               PersonDataTable.GetChanges(DataRowState.Added);
+		 DataRow rw1 = PersonDataTable.NewRow();
+		 rw1["ID"] = "0";
+		 rw1["Name"] = "Mark";
+		 rw1["City"] = "Delhi";
+		 rw1["Gender"] = "Male";
+		 PersonDataTable.Rows.Add(rw1);
 
-             // Configure the SqlCommand and SqlParameter.
-             SqlCommand insertCommand = new SqlCommand(
-                 "usp_InsertPerson", connection);
-             insertCommand.CommandType = CommandType.StoredProcedure;
-             SqlParameter tvpParam = insertCommand.Parameters.AddWithValue(
-                 "@person", addedPerson);
-             tvpParam.SqlDbType = SqlDbType.Structured;
 
-             // Execute the command.
-             insertCommand.ExecuteNonQuery();
-         }
-     }
- }
+		 // Assumes connection is an open SqlConnection object.
+		 using (connection)
+		 {
+		     connection.Open();
+		     // Create a DataTable with the modified rows.
+		     DataTable addedPerson =
+		       PersonDataTable.GetChanges(DataRowState.Added);
+
+		     // Configure the SqlCommand and SqlParameter.
+		     SqlCommand insertCommand = new SqlCommand(
+			 "usp_InsertPerson", connection);
+		     insertCommand.CommandType = CommandType.StoredProcedure;
+		     SqlParameter tvpParam = insertCommand.Parameters.AddWithValue(
+			 "@person", addedPerson);
+		     tvpParam.SqlDbType = SqlDbType.Structured;
+
+		     // Execute the command.
+		     insertCommand.ExecuteNonQuery();
+		 }
+	     }
+	 }
 
 
