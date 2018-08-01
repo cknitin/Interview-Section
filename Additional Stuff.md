@@ -25,19 +25,19 @@
           * Application Logic Tire (Services)
           * Data Tire
  
-       ### Presentation Tire
+     ### Presentation Tire
            It has one layer that use the WPF for creating UI it support MMVM design pattern for building the application UI
-       ### Application Logic Tire
-           This tire some layers that contains the business logics, and these business logics are written in business access layer and              this business layer is access by the serrvice Web API/ WCF. Its also has some other layers like
+     ### Application Logic Tire
+     This tire some layers that contains the business logics, and these business logics are written in business access layer and              this business layer is access by the serrvice Web API/ WCF. Its also has some other layers like
            * Third parties integrations layer
            * Data access Layer
            * Entities objects layer
            * Common 
            * ORM
-       ### Data Tire
-           This contains the database server.
+     ### Data Tire
+     This contains the database server.
 
-      If he ask about example of N-Tire applications - the add the additional layer for running windows servies.
+     If he ask about example of N-Tire applications - the add the additional layer for running windows servies.
           
 * ## Tire vs Layer
  
