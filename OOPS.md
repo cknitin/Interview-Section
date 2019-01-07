@@ -1093,4 +1093,37 @@ If a class have both static and non static constructor then static constructor w
 	     }
 	 }
 
+## Dynamic Binding
+
+	class A
+	{
+	    public virtual void WhoAreYou() { Console.WriteLine("I am an A"); }
+	}
+	class B : A
+	{
+	    public override void WhoAreYou() { Console.WriteLine("I am a B"); }
+	}
+	class C : B
+	{
+	    public new virtual void WhoAreYou() { Console.WriteLine("I am a C"); }
+	}
+	class D : C
+	{
+	    public override void WhoAreYou() { Console.WriteLine("I am a D"); }
+	}
+
+	class Program
+	{
+	    static void Main(string[] args)
+	    {
+
+		C c = new D();
+            	c.WhoAreYou(); // "I am a D"
+
+            	A a = new D();
+            	a.WhoAreYou(); // "I am a B" !!
+
+		Console.ReadLine();
+	    }
+	}
 
